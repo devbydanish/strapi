@@ -19,14 +19,6 @@
       "type": "uid",
       "targetField": "name"
     },
-    "status": {
-      "type": "enumeration",
-      "enum": [
-        "active",
-        "inactive"
-      ],
-      "default": "active"
-    },
     "latitude": {
       "type": "decimal"
     },
@@ -38,6 +30,10 @@
       "relation": "oneToMany",
       "target": "api::listing.listing",
       "mappedBy": "city"
+    },
+    "active": {
+      "type": "boolean",
+      "default": true
     }
   }
 }

@@ -1,0 +1,27 @@
+{
+  "kind": "singleType",
+  "collectionName": "emails",
+  "info": {
+    "singularName": "email",
+    "pluralName": "emails",
+    "displayName": "Email",
+    "description": "Email notification service configuration"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "registrationEmailSubject": {
+      "type": "string",
+      "default": "Welcome to Lust66 - Account Confirmation"
+    },
+    "listingSubmittedEmailSubject": {
+      "type": "string",
+      "default": "Your Ad Has Been Submitted - Lust66"
+    },
+    "adminNotificationEmailSubject": {
+      "type": "string",
+      "default": "New listing submitted by [email]"
+    }
+  }
+} 

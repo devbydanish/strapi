@@ -437,6 +437,37 @@ export interface ApiCityCity extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiEmailEmail extends Struct.SingleTypeSchema {
+  collectionName: 'emails';
+  info: {
+    description: 'Email notification service configuration';
+    displayName: 'Email';
+    pluralName: 'emails';
+    singularName: 'email';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    adminNotificationEmailSubject: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'New listing submitted by [email]'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    listingSubmittedEmailSubject: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Your Ad Has Been Submitted - Lust66'>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::email.email'> &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    registrationEmailSubject: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Welcome to Lust66 - Account Confirmation'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiListingListing extends Struct.CollectionTypeSchema {
   collectionName: 'listings';
   info: {
@@ -449,6 +480,11 @@ export interface ApiListingListing extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
+    advertiserId: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    bbsThreadUrl: Schema.Attribute.String;
     category: Schema.Attribute.Relation<'manyToOne', 'api::category.category'>;
     city: Schema.Attribute.Relation<'manyToOne', 'api::city.city'>;
     createdAt: Schema.Attribute.DateTime;
@@ -457,6 +493,11 @@ export interface ApiListingListing extends Struct.CollectionTypeSchema {
     description: Schema.Attribute.RichText;
     featured: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     images: Schema.Attribute.Media<'images', true>;
+    linkTargetType: Schema.Attribute.Enumeration<
+      ['internal', 'external', 'bbs']
+    > &
+      Schema.Attribute.DefaultTo<'internal'>;
+    linkTargetValue: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -473,6 +514,7 @@ export interface ApiListingListing extends Struct.CollectionTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    websiteUrl: Schema.Attribute.String;
   };
 }
 
@@ -997,7 +1039,6 @@ export interface PluginUsersPermissionsUser
   };
   options: {
     draftAndPublish: false;
-    timestamps: true;
   };
   attributes: {
     blocked: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
@@ -1011,6 +1052,7 @@ export interface PluginUsersPermissionsUser
       Schema.Attribute.SetMinMaxLength<{
         minLength: 6;
       }>;
+    listings: Schema.Attribute.Relation<'oneToMany', 'api::listing.listing'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -1053,6 +1095,7 @@ declare module '@strapi/strapi' {
       'admin::user': AdminUser;
       'api::category.category': ApiCategoryCategory;
       'api::city.city': ApiCityCity;
+      'api::email.email': ApiEmailEmail;
       'api::listing.listing': ApiListingListing;
       'api::promotion.promotion': ApiPromotionPromotion;
       'api::tag.tag': ApiTagTag;

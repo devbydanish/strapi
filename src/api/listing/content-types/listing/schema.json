@@ -61,6 +61,30 @@
     },
     "subtitle": {
       "type": "string"
+    },
+    "linkTargetType": {
+      "type": "enumeration",
+      "enum": [
+        "internal",
+        "external",
+        "bbs"
+      ],
+      "default": "internal"
+    },
+    "linkTargetValue": {
+      "type": "string"
+    },
+    "websiteUrl": {
+      "type": "string"
+    },
+    "bbsThreadUrl": {
+      "type": "string"
+    },
+    "advertiserId": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "listings"
     }
   }
 }

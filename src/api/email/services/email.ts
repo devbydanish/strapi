@@ -1,5 +1,28 @@
+interface User {
+  email: string;
+  username: string;
+}
+
+interface Listing {
+  id: number;
+  title: string;
+  category?: {
+    name: string;
+  };
+  city?: {
+    name: string;
+  };
+}
+
+interface EmailResponse {
+  success: boolean;
+  error?: any;
+}
+
 export default {
-  async sendRegistrationEmail(user) {
+  async sendRegistrationEmail(user: User): Promise<EmailResponse> {
+    console.log('📧 Attempting to send registration email to:', user.email);
+    
     const strapiHost = process.env.STRAPI_HOSTNAME || 'bbs.lust66.com';
     const loginUrl = `https://${strapiHost}/login`;
     
@@ -18,15 +41,17 @@ export default {
     };
 
     try {
+      console.log('Email options:', JSON.stringify(emailOptions, null, 2));
       await strapi.plugins['email'].services.email.send(emailOptions);
+      console.log('📧 Registration email sent successfully to:', user.email);
       return { success: true };
     } catch (error) {
-      console.error('Error sending registration email:', error);
+      console.error('❌ Error sending registration email:', error);
       return { success: false, error };
     }
   },
 
-  async sendListingSubmittedEmail(listing, user) {
+  async sendListingSubmittedEmail(listing: Listing, user: User): Promise<EmailResponse> {
     const strapiHost = process.env.STRAPI_HOSTNAME || 'bbs.lust66.com';
     const editUrl = `https://${strapiHost}/listings/${listing.id}/edit`;
     
@@ -53,7 +78,7 @@ export default {
     }
   },
 
-  async notifyAdminOfNewListing(listing, user) {
+  async notifyAdminOfNewListing(listing: Listing, user: User): Promise<EmailResponse> {
     const adminEmail = process.env.STRAPI_NOTIFICATION_EMAIL || 'support@lust66.com';
     const strapiHost = process.env.STRAPI_HOSTNAME || 'bbs.lust66.com';
     const listingUrl = `https://${strapiHost}/admin/content-manager/collectionType/api::listing.listing/${listing.id}`;

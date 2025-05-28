@@ -480,18 +480,26 @@ export interface ApiListingListing extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
+    address: Schema.Attribute.String;
     advertiserId: Schema.Attribute.Relation<
       'manyToOne',
       'plugin::users-permissions.user'
     >;
+    approvalStatus: Schema.Attribute.Enumeration<
+      ['draft', 'published', 'pending', 'approved', 'rejected']
+    > &
+      Schema.Attribute.DefaultTo<'draft'>;
     bbsThreadUrl: Schema.Attribute.String;
     category: Schema.Attribute.Relation<'manyToOne', 'api::category.category'>;
+    categoryPosition: Schema.Attribute.Integer;
     city: Schema.Attribute.Relation<'manyToOne', 'api::city.city'>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     description: Schema.Attribute.RichText;
+    email: Schema.Attribute.String;
     featured: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    homepagePosition: Schema.Attribute.Integer;
     images: Schema.Attribute.Media<'images', true>;
     linkTargetType: Schema.Attribute.Enumeration<
       ['internal', 'external', 'bbs']
@@ -505,7 +513,7 @@ export interface ApiListingListing extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Private;
     phone: Schema.Attribute.String;
-    published: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    price: Schema.Attribute.Decimal;
     publishedAt: Schema.Attribute.DateTime;
     slug: Schema.Attribute.UID<'title'>;
     subtitle: Schema.Attribute.String;
